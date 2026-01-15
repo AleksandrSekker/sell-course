@@ -1,13 +1,14 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function SuccessPage() {
-  const [message, setMessage] = useState('');
+function SuccessContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams.get('session_id');
+
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     if (!sessionId) {
@@ -79,5 +80,25 @@ export default function SuccessPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+          <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full text-center">
+            <div className="animate-pulse">
+              <div className="h-16 w-16 bg-gray-200 rounded-full mx-auto mb-4"></div>
+              <div className="h-6 bg-gray-200 rounded w-3/4 mx-auto mb-4"></div>
+              <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+            </div>
+          </div>
+        </div>
+      }
+    >
+      <SuccessContent />
+    </Suspense>
   );
 }
